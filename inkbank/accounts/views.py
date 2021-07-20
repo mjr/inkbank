@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.shortcuts import get_object_or_404, render, redirect, resolve_url as r
 
 from .models import Account
-from .forms import NewAccountForm, SearchAccountForm
+from .forms import NewAccountForm, SearchAccountForm, SimpleOperationAccountForm
 
 
 def new(request):
@@ -41,3 +41,29 @@ def search_form(request):
 def get_account(request):
     account = get_object_or_404(Account, number=request.POST.get("number"))
     return render(request, "accounts/account_detail.html", {"account": account})
+
+
+def credit(request):
+    if request.method == "POST":
+        return add_credit(request)
+
+    return credit_form(request)
+
+
+def credit_form(request):
+    return render(
+        request, "accounts/account_credit.html", {"form": SimpleOperationAccountForm()}
+    )
+
+
+def add_credit(request):
+    form = SimpleOperationAccountForm(request.POST)
+
+    if not form.is_valid():
+        return render(request, "accounts/account_credit.html", {"form": form})
+
+    account = get_object_or_404(Account, number=form.cleaned_data["number"])
+    account.balance += form.cleaned_data["value"]
+    account.save()
+    messages.success(request, (f"Crédito adicionado à conta #{account.number}!"))
+    return redirect(r("index"))
