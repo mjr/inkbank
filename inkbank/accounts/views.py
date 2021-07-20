@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, render, redirect, resolve_url as r
 
@@ -122,11 +123,12 @@ def add_transfer(request):
     sender = get_object_or_404(Account, number=form.cleaned_data["number_sender"])
     receiver = get_object_or_404(Account, number=form.cleaned_data["number_receiver"])
 
-    sender.balance -= form.cleaned_data["value"]
-    receiver.balance += form.cleaned_data["value"]
+    with transaction.atomic():
+        sender.balance -= form.cleaned_data["value"]
+        receiver.balance += form.cleaned_data["value"]
 
-    sender.save()
-    receiver.save()
+        sender.save()
+        receiver.save()
 
     messages.success(request, (f"Valor transferido com sucesso!"))
     return redirect(r("index"))
