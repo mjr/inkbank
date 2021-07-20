@@ -63,3 +63,57 @@ class SimpleOperationAccountForm(forms.Form):
             raise ValidationError("O valor tem que ser maior que 0.")
 
         return value
+
+
+class TransferAccountForm(forms.Form):
+    number_sender = forms.IntegerField(
+        label="Número da conta remetente",
+        widget=forms.TextInput(
+            attrs={
+                "class": "focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-sm border-gray-300"
+            }
+        ),
+    )
+    number_receiver = forms.IntegerField(
+        label="Número da conta destinatária",
+        widget=forms.TextInput(
+            attrs={
+                "class": "focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-sm border-gray-300"
+            }
+        ),
+    )
+    value = forms.DecimalField(
+        label="Valor",
+        widget=forms.TextInput(
+            attrs={
+                "class": "focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-sm border-gray-300"
+            }
+        ),
+    )
+
+    def clean_number_sender(self):
+        number = self.cleaned_data["number_sender"]
+        if not Account.objects.filter(number=number).exists():
+            raise ValidationError("Não existe nenhuma conta com este número.")
+
+        return number
+
+    def clean_number_receiver(self):
+        number = self.cleaned_data["number_receiver"]
+        if not Account.objects.filter(number=number).exists():
+            raise ValidationError("Não existe nenhuma conta com este número.")
+
+        return number
+
+    def clean_value(self):
+        value = self.cleaned_data["value"]
+        if value <= 0:
+            raise ValidationError("O valor tem que ser maior que 0.")
+
+        sender = Account.objects.get(number=self.cleaned_data["number_sender"])
+        if sender.balance < value:
+            raise ValidationError(
+                f"O remetente não tem esse valor para transferir. Saldo do remetente: R$ {sender.balance}"
+            )
+
+        return value

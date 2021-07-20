@@ -2,7 +2,12 @@ from django.contrib import messages
 from django.shortcuts import get_object_or_404, render, redirect, resolve_url as r
 
 from .models import Account
-from .forms import NewAccountForm, SearchAccountForm, SimpleOperationAccountForm
+from .forms import (
+    NewAccountForm,
+    SearchAccountForm,
+    SimpleOperationAccountForm,
+    TransferAccountForm,
+)
 
 
 def new(request):
@@ -92,4 +97,36 @@ def add_debit(request):
     account.balance -= form.cleaned_data["value"]
     account.save()
     messages.success(request, (f"Valor debitado da conta #{account.number}!"))
+    return redirect(r("index"))
+
+
+def transfer(request):
+    if request.method == "POST":
+        return add_transfer(request)
+
+    return transfer_form(request)
+
+
+def transfer_form(request):
+    return render(
+        request, "accounts/account_transfer.html", {"form": TransferAccountForm()}
+    )
+
+
+def add_transfer(request):
+    form = TransferAccountForm(request.POST)
+
+    if not form.is_valid():
+        return render(request, "accounts/account_transfer.html", {"form": form})
+
+    sender = get_object_or_404(Account, number=form.cleaned_data["number_sender"])
+    receiver = get_object_or_404(Account, number=form.cleaned_data["number_receiver"])
+
+    sender.balance -= form.cleaned_data["value"]
+    receiver.balance += form.cleaned_data["value"]
+
+    sender.save()
+    receiver.save()
+
+    messages.success(request, (f"Valor transferido com sucesso!"))
     return redirect(r("index"))
