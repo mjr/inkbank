@@ -1,7 +1,8 @@
 from django.contrib import messages
-from django.shortcuts import render, redirect, resolve_url as r
+from django.shortcuts import get_object_or_404, render, redirect, resolve_url as r
 
-from .forms import NewAccountForm
+from .models import Account
+from .forms import NewAccountForm, SearchAccountForm
 
 
 def new(request):
@@ -24,3 +25,19 @@ def create(request):
     form.save()
     messages.success(request, ("Conta cadastrada com sucesso!"))
     return redirect(r("index"))
+
+
+def detail(request):
+    if request.method == "POST":
+        return get_account(request)
+
+    return search_form(request)
+
+
+def search_form(request):
+    return render(request, "accounts/account_search.html", {"form": SearchAccountForm()})
+
+
+def get_account(request):
+    account = get_object_or_404(Account, number=request.POST.get("number"))
+    return render(request, "accounts/account_detail.html", {"account": account})
