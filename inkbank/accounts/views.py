@@ -51,7 +51,7 @@ def get_account(request):
 
 def credit(request):
     if request.method == "POST":
-        return add_credit(request)
+        return process_credit(request)
 
     return credit_form(request)
 
@@ -62,7 +62,7 @@ def credit_form(request):
     )
 
 
-def add_credit(request):
+def process_credit(request):
     form = SimpleOperationAccountForm(request.POST)
 
     if not form.is_valid():
@@ -77,7 +77,7 @@ def add_credit(request):
 
 def debit(request):
     if request.method == "POST":
-        return add_debit(request)
+        return process_debit(request)
 
     return debit_form(request)
 
@@ -88,7 +88,7 @@ def debit_form(request):
     )
 
 
-def add_debit(request):
+def process_debit(request):
     form = SimpleOperationAccountForm(request.POST)
 
     if not form.is_valid():
@@ -103,7 +103,7 @@ def add_debit(request):
 
 def transfer(request):
     if request.method == "POST":
-        return add_transfer(request)
+        return process_transfer(request)
 
     return transfer_form(request)
 
@@ -114,7 +114,7 @@ def transfer_form(request):
     )
 
 
-def add_transfer(request):
+def process_transfer(request):
     form = TransferAccountForm(request.POST)
 
     if not form.is_valid():
