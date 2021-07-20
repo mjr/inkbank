@@ -8,23 +8,47 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
     <title>Painel | Inkbank</title>
   </head>
-  <body class="bg-gray-100 p-8">
-    <h1 class="order-1 text-3xl sm:text-5xl sm:leading-none font-extrabold tracking-tight mb-4"><span class="text-indigo-600">Ink</span>bank</h1>
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 xl:gap-8">
-      <section class="flex">
-        <a href="#">
-          <div class="w-full relative text-white overflow-hidden rounded-3xl flex shadow-lg">
-            <div class="w-full flex md:flex-col bg-gradient-to-br from-purple-500 to-indigo-500">
-              <div class=" sm:max-w-sm sm:flex-none md:w-auto md:flex-auto flex flex-col items-start relative z-10 p-6 xl:p-8">
-                <h2 class="text-xl font-semibold mb-2 text-shadow">Criar conta</h2>
-                <p class="font-medium text-violet-100 text-shadow mb-4">
-                  Clique aqui para criar sua conta.
-                </p>
+  <body class="bg-gray-100">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="px-8 mt-2">
+          <div class="bg-indigo-600 rounded-lg">
+            <div class="max-w-7xl mx-auto py-3 px-3 sm:px-6 lg:px-8">
+              <div class="flex items-center justify-between flex-wrap">
+                <div class="w-0 flex-1 flex items-center">
+                  <span class="flex p-2 rounded-lg bg-indigo-800">
+                    <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+                    </svg>
+                  </span>
+                  <p class="ml-3 font-medium text-white truncate">
+                    {{ message }}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
-        </a>
-      </section>
+        </div>
+      {% endfor %}
+    {% endif %}
+    <div class="p-8">
+      <h1 class="order-1 text-3xl sm:text-5xl sm:leading-none font-extrabold tracking-tight mb-4"><span class="text-indigo-600">Ink</span>bank</h1>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 xl:gap-8">
+        <section class="flex">
+          <a href="{% url 'new' %}">
+            <div class="w-full relative text-white overflow-hidden rounded-3xl flex shadow-lg">
+              <div class="w-full flex md:flex-col bg-gradient-to-br from-purple-500 to-indigo-500">
+                <div class=" sm:max-w-sm sm:flex-none md:w-auto md:flex-auto flex flex-col items-start relative z-10 p-6 xl:p-8">
+                  <h2 class="text-xl font-semibold mb-2 text-shadow">Criar conta</h2>
+                  <p class="font-medium text-violet-100 text-shadow mb-4">
+                    Clique aqui para criar sua conta.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </a>
+        </section>
+      </div>
     </div>
   </body>
 </html>

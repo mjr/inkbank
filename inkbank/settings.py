@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # Apps project
+    "inkbank.accounts",
     "inkbank.core",
     # Third party apps
 ]
