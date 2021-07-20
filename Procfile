@@ -1,0 +1,1 @@
+web: gunicorn inkbank.wsgi --log-file -
