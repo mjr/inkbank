@@ -51,7 +51,7 @@
         <section class="flex">
           <a href="{% url 'detail' %}">
             <div class="w-full relative text-white overflow-hidden rounded-3xl flex shadow-lg">
-              <div class="w-full flex md:flex-col bg-gradient-to-br from-pink-500 to-rose-500">
+              <div class="w-full flex md:flex-col bg-gradient-to-br from-light-blue-400 to-indigo-500">
                 <div class=" sm:max-w-sm sm:flex-none md:w-auto md:flex-auto flex flex-col items-start relative z-10 p-6 xl:p-8">
                   <h2 class="text-xl font-semibold mb-2 text-shadow">Consulta saldo</h2>
                   <p class="font-medium text-violet-100 text-shadow mb-4">
@@ -65,11 +65,25 @@
         <section class="flex">
           <a href="{% url 'credit' %}">
             <div class="w-full relative text-white overflow-hidden rounded-3xl flex shadow-lg">
-              <div class="w-full flex md:flex-col bg-gradient-to-br from-yellow-400 to-orange-500">
+              <div class="w-full flex md:flex-col bg-gradient-to-br from-green-400 to-cyan-500">
                 <div class=" sm:max-w-sm sm:flex-none md:w-auto md:flex-auto flex flex-col items-start relative z-10 p-6 xl:p-8">
                   <h2 class="text-xl font-semibold mb-2 text-shadow">Adicionar crédito</h2>
                   <p class="font-medium text-violet-100 text-shadow mb-4">
                     Clique aqui para adicionar crédito a sua conta.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </a>
+        </section>
+        <section class="flex">
+          <a href="{% url 'debit' %}">
+            <div class="w-full relative text-white overflow-hidden rounded-3xl flex shadow-lg">
+              <div class="w-full flex md:flex-col bg-gradient-to-br from-pink-500 to-rose-500">
+                <div class=" sm:max-w-sm sm:flex-none md:w-auto md:flex-auto flex flex-col items-start relative z-10 p-6 xl:p-8">
+                  <h2 class="text-xl font-semibold mb-2 text-shadow">Debitar valor</h2>
+                  <p class="font-medium text-violet-100 text-shadow mb-4">
+                    Clique aqui para debitar um valor da sua conta.
                   </p>
                 </div>
               </div>

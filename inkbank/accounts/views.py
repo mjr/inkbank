@@ -67,3 +67,29 @@ def add_credit(request):
     account.save()
     messages.success(request, (f"Crédito adicionado à conta #{account.number}!"))
     return redirect(r("index"))
+
+
+def debit(request):
+    if request.method == "POST":
+        return add_debit(request)
+
+    return debit_form(request)
+
+
+def debit_form(request):
+    return render(
+        request, "accounts/account_debit.html", {"form": SimpleOperationAccountForm()}
+    )
+
+
+def add_debit(request):
+    form = SimpleOperationAccountForm(request.POST)
+
+    if not form.is_valid():
+        return render(request, "accounts/account_debit.html", {"form": form})
+
+    account = get_object_or_404(Account, number=form.cleaned_data["number"])
+    account.balance -= form.cleaned_data["value"]
+    account.save()
+    messages.success(request, (f"Valor debitado da conta #{account.number}!"))
+    return redirect(r("index"))
