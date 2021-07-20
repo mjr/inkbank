@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <title>Painel | Inkbank</title>
+  </head>
+  <body class="bg-gray-100 p-8">
+    <h1 class="order-1 text-3xl sm:text-5xl sm:leading-none font-extrabold tracking-tight mb-4"><span class="text-indigo-600">Ink</span>bank</h1>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 xl:gap-8">
+      <section class="flex">
+        <a href="#">
+          <div class="w-full relative text-white overflow-hidden rounded-3xl flex shadow-lg">
+            <div class="w-full flex md:flex-col bg-gradient-to-br from-purple-500 to-indigo-500">
+              <div class=" sm:max-w-sm sm:flex-none md:w-auto md:flex-auto flex flex-col items-start relative z-10 p-6 xl:p-8">
+                <h2 class="text-xl font-semibold mb-2 text-shadow">Criar conta</h2>
+                <p class="font-medium text-violet-100 text-shadow mb-4">
+                  Clique aqui para criar sua conta.
+                </p>
+              </div>
+            </div>
+          </div>
+        </a>
+      </section>
+    </div>
+  </body>
+</html>
