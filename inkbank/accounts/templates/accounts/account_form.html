@@ -19,6 +19,18 @@
         <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
           <div>
             <label
+              for="{{ form.kind.id_for_label }}"
+              class="block text-sm font-medium text-gray-700"
+            >
+              {{ form.kind.label }}
+            </label>
+            {{ form.kind }}
+            <span class="block text-xs text-red-600 mt-1">
+              {{ form.kind.errors }}
+            </span>
+          </div>
+          <div>
+            <label
               for="{{ form.number.id_for_label }}"
               class="block text-sm font-medium text-gray-700"
             >
