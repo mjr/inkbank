@@ -117,3 +117,42 @@ class TransferAccountForm(forms.Form):
             )
 
         return value
+
+
+class EarnInterestAccountForm(forms.Form):
+    number = forms.IntegerField(
+        label="Número",
+        widget=forms.TextInput(
+            attrs={
+                "class": "focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-sm border-gray-300"
+            }
+        ),
+    )
+    interest = forms.DecimalField(
+        label="Taxa de juros",
+        widget=forms.TextInput(
+            attrs={
+                "class": "focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-sm border-gray-300"
+            }
+        ),
+    )
+
+    def clean_number(self):
+        number = self.cleaned_data["number"]
+        if not Account.objects.filter(number=number).exists():
+            raise ValidationError("Não existe nenhuma conta com este número.")
+
+        account = Account.objects.get(number=number)
+        if account.kind != Account.SAVINGS:
+            raise ValidationError(
+                f"Operação permitida apenas para contas poupança. Está é uma {account.get_kind_display().lower()}."
+            )
+
+        return number
+
+    def clean_interest(self):
+        interest = self.cleaned_data["interest"]
+        if interest <= 0:
+            raise ValidationError("Os juros tem que ser maior que 0.")
+
+        return interest

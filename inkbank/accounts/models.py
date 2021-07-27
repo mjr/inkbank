@@ -1,12 +1,20 @@
+from decimal import Decimal
+
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models, transaction
 
+from inkbank.core.utils import percentage
+
 
 class Account(models.Model):
     SIMPLE = "SI"
+    SAVINGS = "SA"
 
-    KINDS = ((SIMPLE, "Conta simples"),)
+    KINDS = (
+        (SIMPLE, "Conta simples"),
+        (SAVINGS, "Conta poupança"),
+    )
 
     number = models.PositiveIntegerField(
         "número", unique=True, validators=[MinValueValidator(10000)]
@@ -24,7 +32,7 @@ class Account(models.Model):
         return f"{self.number}"
 
     def clean(self):
-        if self.kind == Account.SIMPLE:
+        if self.kind == Account.SIMPLE or self.kind == Account.SAVINGS:
             pass
 
         else:
@@ -63,3 +71,10 @@ class Account(models.Model):
 
             self.save()
             receiver.save()
+
+    def earn_interest(self, interest):
+        if self.kind != Account.SAVINGS:
+            raise ValidationError("Operação permitida apenas para contas poupança.")
+
+        self.balance += percentage(self.balance, interest)
+        self.save()
