@@ -51,7 +51,7 @@ class Account(models.Model):
 
     def calculate_bonus(self, value, kind="deposit"):
         MINIMUM_VALUE_TO_BONUS_DEPOSIT = 100
-        MINIMUM_VALUE_TO_BONUS_TRANSFER = 200
+        MINIMUM_VALUE_TO_BONUS_TRANSFER = 150
 
         if kind == "transfer":
             return value // MINIMUM_VALUE_TO_BONUS_TRANSFER
