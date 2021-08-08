@@ -9,10 +9,12 @@ from inkbank.core.utils import percentage
 
 class Account(models.Model):
     SIMPLE = "SI"
+    BONUS = "BO"
     SAVINGS = "SA"
 
     KINDS = (
         (SIMPLE, "Conta simples"),
+        (BONUS, "Conta bônus"),
         (SAVINGS, "Conta poupança"),
     )
 
@@ -22,6 +24,7 @@ class Account(models.Model):
     balance = models.DecimalField("saldo", max_digits=9, decimal_places=2, default=0)
     created_at = models.DateTimeField("criada em", auto_now_add=True)
     kind = models.CharField("tipo", max_length=2, choices=KINDS, default=SIMPLE)
+    score = models.IntegerField("pontuação", null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "contas"
@@ -35,6 +38,10 @@ class Account(models.Model):
         if self.kind == Account.SIMPLE or self.kind == Account.SAVINGS:
             pass
 
+        elif self.kind == Account.BONUS:
+            if not self.pk:
+                self.score = 10
+
         else:
             assert False, f'Unknown account type "{self.kind}"'
 
@@ -42,9 +49,21 @@ class Account(models.Model):
         self.full_clean()
         return super().save(*args, **kwargs)
 
+    def calculate_bonus(self, value, kind="deposit"):
+        MINIMUM_VALUE_TO_BONUS_DEPOSIT = 100
+        MINIMUM_VALUE_TO_BONUS_TRANSFER = 200
+
+        if kind == "transfer":
+            return value // MINIMUM_VALUE_TO_BONUS_TRANSFER
+
+        return value // MINIMUM_VALUE_TO_BONUS_DEPOSIT
+
     def deposit(self, value):
         if value <= 0:
             raise ValidationError("O valor tem que ser maior que 0.")
+
+        if self.kind == Account.BONUS:
+            self.score += self.calculate_bonus(value)
 
         self.balance += value
         self.save()
@@ -65,10 +84,13 @@ class Account(models.Model):
                 f"O remetente não tem esse valor para transferir. Saldo do remetente: R$ {self.balance}"
             )
 
-        with transaction.atomic():
+        if receiver.kind == Account.BONUS:
+            receiver.score += self.calculate_bonus(value, "transfer")
+
             self.balance -= value
             receiver.balance += value
 
+        with transaction.atomic():
             self.save()
             receiver.save()
 
