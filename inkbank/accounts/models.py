@@ -45,6 +45,9 @@ class Account(models.Model):
         else:
             assert False, f'Unknown account type "{self.kind}"'
 
+        if self.kind == Account.SAVINGS and self.balance < 0:
+            raise ValidationError("Conta poupança não pode ter saldo negativo.")
+
     def save(self, *args, **kwargs):
         self.full_clean()
         return super().save(*args, **kwargs)
