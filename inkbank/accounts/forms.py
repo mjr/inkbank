@@ -7,7 +7,7 @@ from .models import Account
 class NewAccountForm(forms.ModelForm):
     class Meta:
         model = Account
-        fields = ["kind", "number"]
+        fields = ["kind", "number", "balance"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -21,6 +21,18 @@ class NewAccountForm(forms.ModelForm):
                 "class": "focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-sm border-gray-300"
             }
         )
+        self.fields["balance"].widget.attrs.update(
+            {
+                "class": "focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-sm border-gray-300"
+            }
+        )
+
+    def clean_balance(self):
+        balance = self.cleaned_data["balance"]
+        if balance < 0:
+            raise ValidationError("O saldo tem que ser maior ou igual a 0.")
+
+        return balance
 
 
 class SearchAccountForm(forms.ModelForm):
