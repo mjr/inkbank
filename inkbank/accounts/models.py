@@ -45,6 +45,9 @@ class Account(models.Model):
         else:
             assert False, f'Unknown account type "{self.kind}"'
 
+        if self.kind == Account.SAVINGS and self.balance < 0:
+            raise ValidationError("Conta poupança não pode ter saldo negativo.")
+
         # Check maximum negative balance limit
         MAXIMUM_NEGATIVE_BALANCE_LIMIT = Decimal("-1000")
         if (
