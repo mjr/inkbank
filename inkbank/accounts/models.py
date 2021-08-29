@@ -99,8 +99,8 @@ class Account(models.Model):
         if receiver.kind == Account.BONUS:
             receiver.score += self.calculate_bonus(value, "transfer")
 
-            self.balance -= value
-            receiver.balance += value
+        self.balance -= value
+        receiver.balance += value
 
         with transaction.atomic():
             self.save()
