@@ -9,6 +9,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      SECRET_KEY: THIS_IS_NOT_SECRET
+      ALLOWED_HOSTS: localhost, 127.0.0.1
+
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
