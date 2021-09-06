@@ -48,6 +48,15 @@ class Account(models.Model):
         if self.kind == Account.SAVINGS and self.balance < 0:
             raise ValidationError("Conta poupança não pode ter saldo negativo.")
 
+        # Check maximum negative balance limit
+        MAXIMUM_NEGATIVE_BALANCE_LIMIT = Decimal("-1000")
+        if (
+            self.kind == Account.SIMPLE or self.kind == Account.BONUS
+        ) and self.balance <= MAXIMUM_NEGATIVE_BALANCE_LIMIT:
+            raise ValidationError(
+                f"Você execedeu o valor limite máximo de saldo negativo, que é {MAXIMUM_NEGATIVE_BALANCE_LIMIT}."
+            )
+
     def save(self, *args, **kwargs):
         self.full_clean()
         return super().save(*args, **kwargs)
@@ -90,8 +99,8 @@ class Account(models.Model):
         if receiver.kind == Account.BONUS:
             receiver.score += self.calculate_bonus(value, "transfer")
 
-            self.balance -= value
-            receiver.balance += value
+        self.balance -= value
+        receiver.balance += value
 
         with transaction.atomic():
             self.save()

@@ -41,6 +41,18 @@
               {{ form.number.errors }}
             </span>
           </div>
+          <div id="{{ form.balance.id_for_label }}_container">
+            <label
+              for="{{ form.balance.id_for_label }}"
+              class="block text-sm font-medium text-gray-700"
+            >
+              {{ form.balance.label }}
+            </label>
+            {{ form.balance }}
+            <span class="block text-xs text-red-600 mt-1">
+              {{ form.balance.errors }}
+            </span>
+          </div>
         </div>
         <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
           <button
@@ -69,5 +81,33 @@
         </div>
       </div>
     </form>
+    <script type="text/javascript">
+      (function() {
+        const KIND_SAVINGS = "SA"
+        const selectKindEl = document.getElementById("{{ form.kind.id_for_label }}");
+        const containerBalanceEl = document.getElementById(
+          "{{ form.balance.id_for_label }}_container"
+        );
+
+        function handleContainerDisplay(value) {
+          if (value === KIND_SAVINGS) {
+            containerBalanceEl.style.display = "block";
+          } else {
+            containerBalanceEl.style.display = "none";
+          }
+        }
+
+        function checkSelectKindInitial() {
+          handleContainerDisplay(selectKindEl)
+        }
+
+        function handleSelectChange(event) {
+          handleContainerDisplay(event.target.value)
+        }
+
+        selectKindEl.addEventListener("change", handleSelectChange, false);
+        checkSelectKindInitial();
+      })();
+    </script>
   </body>
 </html>

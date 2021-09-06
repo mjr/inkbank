@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      SECRET_KEY: THIS_IS_NOT_SECRET
+      ALLOWED_HOSTS: localhost, 127.0.0.1
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.9.x"
+
+      - name: Run Black code style
+        if: github.ref == 'refs/heads/main'
+        uses: psf/black@stable
+        with:
+          options: "--line-length 89"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Syntactic check
+        run: |
+          python manage.py check
+
+      - name: Run Tests
+        run: |
+          python manage.py test
+
+      - name: Generate zip and make available for download
+        if: github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          files: |
+            ./release/*.tar.gz
+            ./release/*.zip
