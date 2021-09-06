@@ -19,8 +19,9 @@ jobs:
         with:
           python-version: "3.9.x"
 
-      if: github.ref == 'refs/heads/main'
-      - uses: psf/black@stable
+      - name: Run Black code style
+        if: github.ref == 'refs/heads/main'
+        uses: psf/black@stable
         with:
           options: "--line-length 89"
 
@@ -37,8 +38,8 @@ jobs:
         run: |
           python manage.py test
 
-      if: github.ref == 'refs/heads/main'
       - name: Generate zip and make available for download
+        if: github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ github.ref }}
